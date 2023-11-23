@@ -1,7 +1,9 @@
-
 var chart;
 var option;
 
+var polygon1 = [];
+var polygon2 = [];
+var polygon3 = [];
 
 function init(centerCoord) {
     //設定Mapbox的取用Token。
@@ -13,7 +15,7 @@ function init(centerCoord) {
         mapbox3D: {
             style: 'mapbox://styles/biabobo/cjha51jt70x802rqsorws3xqz',
             center: [centerCoord[1], centerCoord[0]],
-            zoom: 16.5,
+            zoom: 15,
             pitch: 60,
             altitudeScale: 1,
             shading: 'color',
@@ -211,29 +213,6 @@ function createFlightPointsDataByHeightRange(gpsList, circle_count, min_height, 
     return coord_data;
 }
 
-function setScatterToMap(data) {
-    chart.setOption({
-        series: [{
-            name: 'Flight Path Point',
-            type: 'scatter3D',
-            coordinateSystem: 'mapbox3D',
-            symbol: 'circle',
-            symbolSize: 8,
-            animation: false,
-            data: data,
-            label: {
-                show: false
-            },
-            emphasis: {
-                itemStyle: {
-                    borderWidth: 0.3,
-                    borderColor: 'white'
-                }
-            }
-        }]
-    });
-}
-
 //形狀:正方形
 function createSqureCoords(center_coord, radius) {
     var point = turf.point([center_coord[1], center_coord[0]]);
@@ -427,9 +406,8 @@ function loadMap() {
 }
 
 function createShape(file) {
-    let csvFilePath = file;
     let coordinatesArray = [];
-    return fetch(csvFilePath)
+    return fetch(file)
         .then(response => response.text())
         .then(csvString => {
             coordinatesArray = parseCSV(csvString);
@@ -438,7 +416,6 @@ function createShape(file) {
         .catch(error => console.error('Error reading CSV file:', error));
 }
 
-// 解析 CSV 函數
 function parseCSV(csvContent) {
     let coordinatesArray = [];
     const lines = csvContent.split('\n');
@@ -472,4 +449,219 @@ function parseCSV(csvContent) {
     }
 
     return coordinatesArray;
+}
+
+async function run() {
+    try {
+        polygon1 = await createShape('test1.csv');
+        polygon2 = createSpringCoords([22.328838, 120.366518], 0.1, 3, 100, 300);
+
+        polygon3 = await createShape('test2.csv');
+
+        loadScatterFlightPlanPath(polygon1.concat(polygon2));
+    } catch (e) {
+        console.log(e);
+    }
+}
+
+function buttunClick(allData) {
+    var switchButton = document.getElementById('switchButton');
+    var allButton = document.getElementById('allButton');
+
+    allButton.addEventListener('click', function () {
+        loadScatterFlightPlanPath(polygon1.concat(polygon2, polygon3));
+    });
+
+    let route = true;
+    switchButton.addEventListener('click', function () {
+        if (route) {
+            switchButton.innerText = '路線2';
+            loadScatterFlightPlanPath(polygon3);
+            setChart(allData[1]);
+        }
+        else {
+            switchButton.innerText = '路線1';
+            loadScatterFlightPlanPath(polygon1.concat(polygon2));
+            setChart(allData[0]);
+        }
+        route = route ? false : true;
+    });
+}
+
+function setChart(data) {
+    var barChart = echarts.init(document.getElementById('rightTwo'));
+    var lineChart = echarts.init(document.getElementById('rightThree'));
+    createChart(data, "bar", barChart);
+    createChart(data, "line", lineChart);
+    createGaugeChart("", 0);
+    createRadarChart("", []);
+}
+
+// 創建柱狀圖或折線圖
+function createChart(data, type, chart) {
+    var values = data["value"];
+    var dateList = [];
+    var tempList = [];
+    var rhList = [];
+
+    for (var i = 0; i < values.length; i++) {
+        var v = values[i];
+        dateList.push(v["date"]);
+        tempList.push(v["temp"]);
+        rhList.push(v["rh"]);
+    }
+
+    var option = {
+        title: {
+            text: data['station'] + " 月平均溫度",
+            textStyle: {
+                color: '#A41623'
+            }
+        },
+        visualMap: {
+            type: 'continuous',  //連續型
+            // type: 'piecewise',   //分段型
+            // splitNumber: 3,      //分段型段數
+            orient: 'horizontal',
+            left: 'center',
+            min: 10,
+            max: 36,
+            text: ['Hot', 'Cold'],
+            dimension: 1,
+            inRange: {
+                color: ['#65B581', '#FFCE34', '#FD665F']
+            }
+        },
+        xAxis: {
+            type: 'category',
+            data: dateList
+        },
+        yAxis: {
+            type: 'value',
+            min: 10,
+            max: 40
+        },
+        series: [
+            {
+                data: tempList,
+                type: type   //"bar"
+            }
+        ]
+    };
+
+    chart.setOption(option);
+
+    chart.on('click', params => {
+        var date = params.name;
+        for (var i = 0; i < values.length; i++) {
+            var v = values[i];
+            if (date == v["date"]) {
+                // 驅動儀錶板圖
+                createGaugeChart(date, v["rh"]);
+                // 驅動雷達圖
+                var radarValue = [v['temp'], v['rain'], v['rh'], v['daylight_hr']];
+                createRadarChart(date, radarValue);
+            }
+        }
+    })
+}
+
+// 創建儀錶板圖
+function createGaugeChart(data, value) {
+    var gaugeChart = echarts.init(document.getElementById('rightFour-left'));
+    option = {
+        title: {
+            text: data + "平均相對濕度",
+            textStyle: {
+                color: '#A41623',
+                fontSize: 11
+            }
+        },
+        series: [
+            {
+                type: 'gauge',
+                axisLine: {
+                    lineStyle: {
+                        width: 20,
+                        color: [
+                            [0.3, '#65B581'],
+                            [0.7, '#FFCE34'],
+                            [1, '#FD665F']
+                        ]
+                    }
+                },
+                pointer: {
+                    itemStyle: {
+                        color: 'auto'
+                    }
+                },
+                axisTick: {
+                    distance: -30,
+                    length: 8,
+                    lineStyle: {
+                        color: '#fff',
+                        width: 2
+                    }
+                },
+                splitLine: {
+                    distance: -30,
+                    length: 30,
+                    lineStyle: {
+                        color: '#fff',
+                        width: 4
+                    }
+                },
+                axisLabel: {
+                    color: 'inherit',
+                    distance: 3,
+                    fontSize: 10
+                },
+                detail: {
+                    valueAnimation: true,
+                    formatter: '{value} %',
+                    fontSize: 15,
+                },
+                data: [
+                    {
+                        value: value
+                    }
+                ]
+            }
+        ]
+    };
+    gaugeChart.setOption(option);
+}
+
+// 創建雷達圖
+function createRadarChart(data, value) {
+    var radarChart = echarts.init(document.getElementById('rightFour-right'));
+    option = {
+        title: {
+            text: data + '氣候數據\n雷達圖',
+            textStyle: {
+                color: '#A41623',
+                fontSize: 11
+            }
+        },
+        lineStyle: {
+            color: '#8BBEB2'
+        },
+        radar: {
+            shape: 'circle',
+            indicator: [
+                { name: '平均溫度', max: 50 },
+                { name: '雨量', max: 500 },
+                { name: '平均濕度', max: 100 },
+                { name: '日照', max: 250 }
+            ]
+        },
+        series: [
+            {
+                name: 'Budget vs spending',
+                type: 'radar',
+                data: [value],
+            }
+        ]
+    };
+    radarChart.setOption(option);
 }

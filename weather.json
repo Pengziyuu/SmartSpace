@@ -1,0 +1,140 @@
+[
+    {
+        "station": "路線1",
+        "coord": [],
+        "value": [
+            {
+                "date": "2023-01",
+                "temp": 17.0,
+                "rh": 77,
+                "rain": 28.0,
+                "daylight_hr": 88.0
+            },
+            {
+                "date": "2023-02",
+                "temp": 17.5,
+                "rh": 83,
+                "rain": 37.5,
+                "daylight_hr": 68.2
+            },
+            {
+                "date": "2023-03",
+                "temp": 20.0,
+                "rh": 72,
+                "rain": 23.5,
+                "daylight_hr": 151.0
+            },
+            {
+                "date": "2023-04",
+                "temp": 22.6,
+                "rh": 75,
+                "rain": 109.5,
+                "daylight_hr": 111.9
+            },
+            {
+                "date": "2023-05",
+                "temp": 25.8,
+                "rh": 76,
+                "rain": 182.5,
+                "daylight_hr": 136.4
+            },
+            {
+                "date": "2023-06",
+                "temp": 28.8,
+                "rh": 79,
+                "rain": 482.0,
+                "daylight_hr": 136.3
+            },
+            {
+                "date": "2023-07",
+                "temp": 30.4,
+                "rh": 73,
+                "rain": 119.0,
+                "daylight_hr": 212.3
+            },
+            {
+                "date": "2023-08",
+                "temp": 29.7,
+                "rh": 77,
+                "rain": 459.5,
+                "daylight_hr": 185.7
+            },
+            {
+                "date": "2023-09",
+                "temp": 29.0,
+                "rh": 77,
+                "rain": 153.0,
+                "daylight_hr": 215.0
+            }
+        ]
+    },
+    {
+        "station": "路線2",
+        "coord": [],
+        "value": [
+            {
+                "date": "2023-01",
+                "temp": 16.3,
+                "rh": 81,
+                "rain": 300.5,
+                "daylight_hr": 59.3
+            },
+            {
+                "date": "2023-02",
+                "temp": 16.7,
+                "rh": 83,
+                "rain": 352.5,
+                "daylight_hr": 48.4
+            },
+            {
+                "date": "2023-03",
+                "temp": 18.5,
+                "rh": 80,
+                "rain": 129.5,
+                "daylight_hr": 132.0
+            },
+            {
+                "date": "2023-04",
+                "temp": 21.7,
+                "rh": 79,
+                "rain": 146.0,
+                "daylight_hr": 116.9
+            },
+            {
+                "date": "2023-05",
+                "temp": 24.8,
+                "rh": 80,
+                "rain": 182.5,
+                "daylight_hr": 115.4
+            },
+            {
+                "date": "2023-06",
+                "temp": 28.2,
+                "rh": 80,
+                "rain": 135.0,
+                "daylight_hr": 164.5
+            },
+            {
+                "date": "2023-07",
+                "temp": 30.2,
+                "rh": 72,
+                "rain": 88.5,
+                "daylight_hr": 247.4
+            },
+            {
+                "date": "2023-08",
+                "temp": 29.3,
+                "rh": 78,
+                "rain": 132.5,
+                "daylight_hr": 191.5
+            },
+            {
+                "date": "2023-09",
+                "temp": 28.1,
+                "rh": 81,
+                "rain": 113.5,
+                "daylight_hr": 204.6
+            }
+        ]
+    }
+]

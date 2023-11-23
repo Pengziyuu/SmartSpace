@@ -10,8 +10,44 @@ body {
 }
 
 #map {
-    width: 100%;
+    width: 70%;
     height: 100vh;
+    float: left;
+}
+
+#rightOne {
+    width: 30%;
+    height: 10%;
+    float: left;
+}
+
+#rightTwo {
+    width: 30%;
+    height: 30%;
+    float: left;
+}
+
+#rightThree {
+    width: 30%;
+    height: 30%;
+    float: left;
+}
+
+#rightFour {
+    width: 30%;
+    height: 30%;
+    float: left;
+}
+
+#rightFour-left {
+    width: 50%;
+    height: 100%;
+    float: left;
+}
+
+#rightFour-right {
+    width: 50%;
+    height: 100%;
     float: left;
 }
 
@@ -79,4 +115,24 @@ body {
     border-radius: 50%;
     background: #4CAF50;
     cursor: pointer;
+}
+
+button {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    font-weight: bold;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    transition-duration: 0.4s;
+    border-radius: 10px;
+}
+
+button:hover {
+    background-color: #45a049;
 }
